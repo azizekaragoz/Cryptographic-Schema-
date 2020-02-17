@@ -1,0 +1,68 @@
+\begin{thebibliography}{10}
+
+\bibitem{kamble2018survey}
+A.~Kamble and S.~Bhutad, ``Survey on internet of things (iot) security issues
+  \& solutions,'' in {\em 2018 2nd International Conference on Inventive
+  Systems and Control (ICISC)}, pp.~307--312, IEEE, 2018.
+
+\bibitem{bogdanov2007present}
+A.~Bogdanov, L.~R. Knudsen, G.~Leander, C.~Paar, A.~Poschmann, M.~J. Robshaw,
+  Y.~Seurin, and C.~Vikkelsoe, ``Present: An ultra-lightweight block cipher,''
+  in {\em International workshop on cryptographic hardware and embedded
+  systems}, pp.~450--466, Springer, 2007.
+
+\bibitem{diffie1976new}
+W.~Diffie and M.~Hellman, ``New directions in cryptography,'' {\em IEEE
+  transactions on Information Theory}, vol.~22, no.~6, pp.~644--654, 1976.
+
+\bibitem{suo2012security}
+H.~Suo, J.~Wan, C.~Zou, and J.~Liu, ``Security in the internet of things: a
+  review,'' in {\em 2012 international conference on computer science and
+  electronics engineering}, vol.~3, pp.~648--651, IEEE, 2012.
+
+\bibitem{samonas2014cia}
+S.~Samonas and D.~Coss, ``The cia strikes back: Redefining confidentiality,
+  integrity and availability in security.,'' {\em Journal of Information System
+  Security}, vol.~10, no.~3, 2014.
+
+\bibitem{falk2015method}
+R.~Falk, H.-J. Hof, and U.~Meyer, ``Method for cryptographically transmitting
+  data between network nodes using a nonce value,'' July~28 2015.
+\newblock US Patent 9,094,818.
+
+\bibitem{maleh2014review}
+Y.~Maleh and A.~Ezzati, ``A review of security attacks and intrusion detection
+  schemes in wireless sensor networks,'' {\em arXiv preprint arXiv:1401.1982},
+  2014.
+
+\bibitem{demirci2009improved}
+H.~Demirci, {\.I}.~Ta{\c{s}}k{\i}n, M.~{\c{C}}oban, and A.~Baysal, ``Improved
+  meet-in-the-middle attacks on aes,'' in {\em International Conference on
+  Cryptology in India}, pp.~144--156, Springer, 2009.
+
+\bibitem{coorporation2011atmel}
+A.~Coorporation, {\em Atmel atmega328p datasheet}, 2011.
+
+\bibitem{jha2011cryptanalysis}
+V.~K. Jha, ``Cryptanalysis of lightweight block ciphers,'' {\em Aalto
+  University School of Science Degree Programme of Computer Science and
+  Engineering, Master's Thesis}, 2011.
+
+\bibitem{wang2014performance}
+X.~Wang, J.~Zhang, E.~M. Schooler, and M.~Ion, ``Performance evaluation of
+  attribute-based encryption: Toward data privacy in the iot,'' in {\em 2014
+  IEEE International Conference on Communications (ICC)}, pp.~725--730, IEEE,
+  2014.
+
+\bibitem{biswas2020lrbc}
+A.~Biswas, A.~Majumdar, S.~Nath, A.~Dutta, and K.~Baishnab, ``Lrbc: a
+  lightweight block cipher design for resource constrained iot devices,'' {\em
+  Journal of Ambient Intelligence and Humanized Computing}, pp.~1--15, 2020.
+
+\bibitem{wu2017lightweight}
+X.-W. Wu, E.-H. Yang, and J.~Wang, ``Lightweight security protocols for the
+  internet of things,'' in {\em 2017 IEEE 28th Annual International Symposium
+  on Personal, Indoor, and Mobile Radio Communications (PIMRC)}, pp.~1--7,
+  IEEE, 2017.
+
+\end{thebibliography}

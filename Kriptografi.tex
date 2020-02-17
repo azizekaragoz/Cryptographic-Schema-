@@ -1,0 +1,166 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{authblk}
+\usepackage{placeins}
+\usepackage[latin5]{inputenc}  
+\usepackage{csvsimple}
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage{multirow}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{tikz}
+    \usetikzlibrary{chains}
+    \usetikzlibrary{positioning}
+\definecolor{mycolor}{RGB}{8,108,131}
+\begin{document}
+
+\title{Cryptographic Schema for IoT End-devices}
+
+\author[1]{Azize Karagoz}
+\author[2]{Busra Calmaz}
+\author[3]{Didem Genc}
+\author[4]{Serap Sahin}
+\affil[1,2,3,4,5]{Computer Engineering, Izmir Institute of Technology}
+
+
+\maketitle
+
+\begin{abstract}
+
+IoT notion began to play an important role in human life. We are trying to make the things accessible through the internet by connecting them to network in order to interact with each other. However this brings important security concerns with it. IoT comprises of interaction of many devices, people, services etc. Things called as end-devices generally have limited power, low computation capability and restricted memory. Therefore, ensuring security for such a resource-limited device is a great challenge since conventional cryptographic algorithms require heavy computational power and large memory. In order to handle these limitations lightweight cryptographic algorithms are used. In this paper, by considering limitations of end-devices, we proposed a cryptographic schema, which uses lightweight cryptographic algorithms, targeting to ensure security in network layer. We aimed to address the secrecy, integrity and authentication concerns by using PRESENT and Diffie-Helman Key Exchange, SHA-256, and Hummingbird-v2 algorithms respectively.  
+
+
+\end{abstract}
+
+\section{INTRODUCTION}
+It is undeniable fact that IoT greatly facilitates human life. For this reason, it has been adopted in many areas. It is possible to encounter IoT enabled devices everywhere. As an example; it is really nice that the air conditioner learns the preferred ambient temperature that the household always use, and adjusts the temperature to that degree before they come. To do this, air conditioner may communicate with the smart car to verify that one of the household member is on the road to home. As this simple scenario indicates, IoT notion involves many-to-many type of interaction like the communication between the smart car and air-conditioner. 
+
+According to Gartner there will be 5.8 billion IoT devices connected to the internet in 2020. Predictably it is nearly impossible to estimate all interactions between these devices priorly. So, the security gains great importance. Unauthorized access to data, monitoring and changing integrity of message or misuse of data can led to significant faults in IoT systems.  
+
+IoT environment consists of heterogeneous hardware devices which are divided into two types; high-end devices and low-end devices. High-end devices have sufficient resource to run the conventional cryptographic algorithms. However, low-end devices are resource-constraint. They have less than 10kB of RAM and less than 100kB of flash memory. Therefore, ensuring security by using conventional cryptographic algorithms such as; AES, ECC, RSA etc. can not be possible. Lightweight cryptographic algorithms, which require low computational power and minimum memory, are used to ensure security of low-end IoT devices.
+
+In general, IoT architecture consists of 3 layers: perception layer, network layer and application layer. Perception layer collects data from surrounding environment through heterogeneous type of sensors. Acquired data from perception layer is conveyed to network layer for reliable data transmission. Application layer is responsible for performing massive data processing and statistical analysis by making use of cloud technologies. 
+
+Firstly it is crucial to investigate the domain to develop a cryptographic schema for IoT end devices. For this reason, the IoT attacks classified by layers are reviewed. Perception layer challenges are generally Unauthorized Access to Tags, Node Capture Attacks, Tag Cloning, False Data Injection Attacks. Attacks on the network layer are similar to those on traditional networks. The network layer challenges are Spoofing Attack, Sinkhole Attack, Sleep Deprivation Attack, Denial of Service (DoS) Attack, Unsecured Protocols. Lastly, application layer security challenges are Phishing Attack, Malicious Virus/worm, Sniffing Attack, Malicious Scripts\cite{kamble2018survey}.  
+ 
+ 
+In this study, we aim to make communication secure between the sensor node and gateway, which are in the same local network. Therefore, we proposed a cryptographic schema that addressing confidentiality and identification for network layer of IoT low-end devices. We used a lightweight cryptographic algorithm PRESENT for message encryption. We made used of Diffie-Helman Key Exchange algorithm for key sharing. Also a nonce value is used for identification. The rest of the paper is organized as follows. Section II gives the background information of our work by explaining used cryptographic algorithms separately. Section III presents the design and implementation details. In Section IV, related work is given. Lastly, in Section V we conclude our paper and give the future work.
+
+
+
+
+\section{BACKGROUND INFORMATION} 
+In this part of the paper, cryptographic algorithms, which are used in the implementation, are explained in briefly. 
+
+\subsection{PRESENT}
+The block cipher PRESENT consists of substitution permutation network with 64 bits block size. It operates 31 rounds and supports two key lengths of 80 and 128 bits. A round is a combination of ByteSub, ShiftRow, MixColum and AddRoundKey operations. The compact size of Present algorithm much more smaller than the AES\cite{bogdanov2007present}. Encryption procedure consists of 3 steps:
+
+\begin{figure}[!htb]
+        \center{\includegraphics[width=7cm]
+        {PRESENT.png}}
+        \caption{\label{present} PRESENT algorithm round\cite{bogdanov2007present}}
+      \end{figure}
+      
+In the first part, the data and the key go through the xor process. The last 64 bit data is taken and this 64 bit data is divided into 16 blocks each containing 16 bits for the next process.
+
+\textbf{Byte substitution layer (sboxLayer):} In these layer a nonlinear substitution block is applied to each 16 block, that obtained previous step, are passed through the substitution boxes and each value in these boxes is replaced by the values in the substitution blocks. The hexadecimal notation of S-box is given in Figure \ref{s-box}.
+
+\begin{figure}[!htb]
+        \center{\includegraphics[width=8cm]
+        {S-box.png}}
+        \caption{\label{s-box} S-box from PRESENT algorithm\cite{bogdanov2007present}}
+      \end{figure}
+      
+\textbf{Bit Permutation (pLayer):} In this layer, each bit of 64 bit input is mixed by bit to bit substitution.
+
+\begin{figure}[!htb]
+        \center{\includegraphics[width=8cm]
+        {substitution-table.png}}
+        \caption{\label{substitution} Substitution table of the PRESENT algorithm\cite{bogdanov2007present}}
+      \end{figure}
+      
+\textbf{Key expansion function: addRoundKey:} After these operations, the key is updated to use for next round. The key is updated as follows:
+\newcommand*\xor{\mathbin{\oplus}}
+\[b_j -> b_j \oplus x_i \]
+where round key $k_i= k_{63}....k_0$ for 1 $<$ i $<$ 32 and present state $b_{63}....b_0$, addRoundKey consists of the operation for 0 $\leq$ j $\leq$ 63 \cite{kamble2018survey}.
+During the encryption procedure, these steps are repeated 32 times and encrypted data is transmitted.
+
+
+\subsection{Diffie-Helman Key Exchange Algorithm}
+Diffie Hellman key exchange algorithm was developed by Whitfield Diffie and Martin Hellman in 1976 \cite{diffie1976new}. It provides securely exchanging cryptographic keys over a public communication channel. The algorithm based on derivation of keys by the communicator's itself instead of changing the keys. For example, Alice and Bob communicate with each other by using symmetric cipher. In this algorithm, Alice and Bob do not actually exchange keys, they derive the key jointly. The steps of the Diffie Hellman key exchange algorithm is given below.
+\begin{itemize}
+\item Bob and Alice agree between them on a large prime p and generator(base) g (0$<g<p$).
+\item Alice chooses her private key \textbf{a} and calculates \textbf{$g^a$ mod p} (her public key). Then Alice sends her public key to Bob.
+\item Bob also chooses his private key \textbf{b} and calculates \textbf{$g^b$ mod p} (his public key). Then Bob sends his public key to Alice.
+\item They calculate \textbf{$g^(a.b)$ mod p} and know a shared secret between them. 
+\end{itemize}
+
+Diffie and Hellman take advantage of the difficulty of the discrete logarithm problem. An attacker who listens to Bob or Alice knows p,g, and public key of Alice and Bob. But it is hard to calculate their private key (if p is a large prime number) because of the discrete logarithm problem.
+\[x = g^a mod p -> Easy problem\]
+\[a = log_gx  -> Hard problem\]
+
+\section{DESIGN AND CONTRIBUTION}
+A well known cryptographic algorithm schemes includes different security protocols such as Table\ref{table1}\cite{suo2012security}.
+In our study, we proposed a cryptographic scheme which includes confidentiality, integrity and availability, also known as the CIA triad\cite{samonas2014cia}.
+
+\begin{table}[!htb]\label{table1}
+\caption{A suite of Cryptographic Algorithms}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Algorithm}                                                                                                  & \textbf{Purpose}                                                           \\ \hline
+\textit{\begin{tabular}[c]{@{}c@{}}Advanced\\ encryption standard (AES)\end{tabular}}                               & Confidentiality                                                            \\ \hline
+\textit{\begin{tabular}[c]{@{}c@{}}Rivest\\ shamir adelman (RSA)/\\ Elliptic curve cryptography (ECC)\end{tabular}} & \begin{tabular}[c]{@{}c@{}}Digital\\ signatures key transport\end{tabular} \\ \hline
+\textit{\begin{tabular}[c]{@{}c@{}}Diffie-hellman\\ (DH)\end{tabular}}                                              & \begin{tabular}[c]{@{}c@{}}Key\\ agreement\end{tabular}                    \\ \hline
+SHA-1/SHA-256                                                                                                       & Integrity                                                                  \\ \hline
+\end{tabular}
+\end{table}
+Normally the advanced encryption standard AES used to ensure confidentiality for security communication. AES is not appropriate the limited end device. So in our project we uses lightweight symmetric encryption algorithm which called PRESENT. 
+The asymmetric algorithm is used to digital signatures and key transport. Usually the Rivest shamir adelman (RSA) and the diffie-hellman (DH) asymmetric key agreement algorithm is used to key agreement. In our project  we use diffie-hellman (DH) asymmetric key agreement algorithm to provide authorization and identification IoT device . 
+The secure hash algorithm used for provide integrity of message. In our project we use the Hmac-Sha-256 algorithm. 
+Additionally, our cryptographic algorithm scheme includes Nonce value \cite{falk2015method} which is used only once. The Nonce value is used as an initializing vector. 
+When we evaluate our project in terms of attacks, we look networks attacks. The main purpose of the network layer in IoT is to provide a secure data transmit between the network?s node. The reason of spoofing attack is that adversary node can get right of entry to the IoT system. IoT systems usually meet the Ip spoofing and RFID spoofing attacks. To prevent these attacks, we need to handle the issue of identification. In our project we use the Nonce value to handle the identification. So we prevent the spoofing attacks. Also the purpose of using Nonce value is to prevent replay attacks on network. 
+Cryptographic Hash Algorithms prevent the side-channel attack, Brute force attack and Collision attack\cite{maleh2014review}. The proposed cryptographic algorithm scheme includes HMAC/SHA-256 hash function to handle the these attacks. So we have provided integrity of the message with hash function. 
+One of the most important security services in IoT is confidentiality of the transmitted data. We used lightweight symmetric encryption algorithm PRESENT to achieve the confidentiality. We can prevent Man-in-the-middle attack, which is one of the most common attack with using the PRESENT an ultra-lightweight block cipher encryption algorithm\cite{demirci2009improved}.
+
+\section{EXPERIMENT} 
+In the implementation we considered the IoT smart home domain. According to the scenario, smart home includes different kinds of several sensors, which are communicating with the gateway through an unreliable transmission media. We aim to ensure secure communication within this local area. We used arduino uno board as an IoT end-device with any type of sensor such that humidity, temperature etc. Arduino has ATmega328p microprocessor \cite{coorporation2011atmel} embedded on it, which has 2kB SRAM, 32kB flash memory and 2kB EEPROM. Also, DFRobot Ethernet Shield is used to connect to Internet. An Ubuntu 18.04 LTS deployed pc is used as a gateway. Between gateway and IoT end-device UDP protocol is used since it is easy to launch. Top view of the environment configuration is given in Figure\ref{conf}. 
+\begin{figure}[!htb]
+        \center{\includegraphics[width=5cm]
+        {Arduino.png}}
+        \caption{\label{conf} Configuration of environment }
+      \end{figure}
+      
+In this scenario, firstly, the gateway and arduino node should share a key via Diffie-Helman Key Exchange algorithm. Later, gateway generates a nonce, that is assigned as a symmetric key between node and gateway. Also generated nonce value is utilized in identification. Since, the nonce value is used in both identification and encryption, it is renewed periodically such as in every hour. Afterwards, gateway sends the symmetric key to the node by encrypting via shared key. After finishing this procedure, the secure communication can start. Step by step explanation of this procedure can be seen in the Figure\ref{steps}.
+\begin{figure}[!htb]
+        \center{\includegraphics[width=8cm]
+        {Steps.png}}
+        \caption{\label{steps} Step by step explanation of the scenario }
+      \end{figure}
+ 
+
+
+\section{RELATED WORK and DISCUSSION}
+In recent year, the number of limited devices is increasing. So on the literature review we see many study on lightweight cryptographic algorithm .
+In paper\cite{jha2011cryptanalysis}, test performance of four different lightweight encryption algorithm. Lightweight encryption algorithms are TEA, KATAN,KLEIN and HIGHT. Authors implemented the study on the Atmel ATtiny45 microcontroller. The study shows memory efficiency, energy consumption in the term of the performance analysis.
+
+In \cite{wang2014performance}, the generic Publish-Subscribe architecture provide privacy for IoT by ABE scheme. There is AES for  encrypted  messages to ensures ciphertext size.  The paper designed secure scheme to provide confidentiality and authentication. The authors uses cryptographic schemes for encryption but this techniques has disadvantage. This scheme is computational overhead for limited end devices. 
+
+The other paper \cite{biswas2020lrbc} proposed a LRBC which is a new lightweight encryption method. This method provide data security on perception layer. LRBS uses Feistel structure as a DES. The structure of LRBS improves for IoT devices. 
+
+This article \cite{kamble2018survey} outlines specific vulnerabilities and possible solutions for IoT devices. There are some security issues in IoT area: First, an Iot application should secure data. Then it should ensure the operation (i.e. sensor operation, data transmission etc.) safety. Finally, it should also handle the information security. This article also explain security challenges for each IoT layer. In our study, we are interested in network layer security, so we examined the challenges and solutions proposed for this layer in this article.
+
+Xin-Wen Wu et al.\cite{wu2017lightweight} mentions that all IoT architectures share some common components such as end devices, edge, and platform. Due to their nature, IoT devices should be affordable thus they are limited in size, energy and their capacities of computing and storage. The physical devices may be connected directly to other physical devices, edge platforms, gateways and since the IoT hubs and gateways are usually well-resourced devices one may argue that as long as the gateways are well protected, it may be sufficient to provide minimum security to lightweight devices. But they also argue that this viewpoint is questionable at best. They proposed a new lightweight security protocol as well as a good comparison between known lightweight security protocols. Their protocols use a lightweight symmetric algorithm for encryption. In the paper ensuring security with a one-key-for-one-file approach was argued. The proposed algorithm can replace IPSec suite, to achieve a higher level of security with very low resource consumption.
+
+
+
+\section{CONCLUSION and FUTURE WORK}
+In our study we proposed a cryptographic scheme which includes confidentiality, integrity and availability on IoT network protocol for provide a secure channel to exchange data transmit. Our cryptographic scheme is suitable for limited end devices. So our proposed scheme is not suitable for every IoT device because of limited device. 
+In future studies, the same cryptographic scheme can be created with the Hummingbird-2 Lightweight Authenticated Encryption algorithm instead of PRESENT, and its efficiency can be tested.
+
+
+\bibliography{ref}{}
+\bibliographystyle{IEEEtr}
+
+\end{document}
